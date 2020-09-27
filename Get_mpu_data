@@ -1,0 +1,62 @@
+from datetime import datetime
+from pytz import timezone
+from mpu6050 import mpu6050
+import time
+import csv
+
+mpu = mpu6050(0x68)
+tz = timezone('US/Eastern')
+
+accel_data = mpu.get_accel_data() #gets data from mpu
+gyro_data = mpu.get_gyro_data()
+get_data = mpu.get_all_data()
+
+#functions to return data aquired by sensor
+def get_stuff():
+    get_data = mpu.get_all_data() #this must be accessed through loop. updater.
+    g = get_data
+    return g
+
+def get_ax(): #x accelerometer data
+    accel_data = mpu.get_accel_data() 
+    ax = accel_data['x']
+    return ax
+    
+def get_ay():
+    accel_data = mpu.get_accel_data() 
+    ay = accel_data['y']
+    return ay
+    
+def get_az():
+    accel_data = mpu.get_accel_data() 
+    az = accel_data['z']
+    return az
+
+def get_gx():
+    gyro_data = mpu.get_gyro_data()
+    gx = gyro_data['x']
+    return gx
+
+def get_gy():
+    gyro_data = mpu.get_gyro_data()
+    gy = gyro_data['y']
+    return gy
+
+def get_gz():
+    gyro_data = mpu.get_gyro_data()
+    gz = gyro_data['z']
+    return gz
+
+def get_time():
+    t = datetime.now(tz)
+    return t
+
+with open("test_data_3.csv", "w", newline='') as csvfile:  # creates csv files in write mode. must be outside of loop
+    
+    csvwriter = csv.writer(csvfile, delimiter=",", lineterminator = '\n')
+    csvwriter.writerow(['Time','Accel X','Accel Y','Accel Z','Gyro X','Gyro Y','Gyro Z'])
+    
+    while True:
+        csvwriter.writerow([get_time(),get_ax(),get_ay(),get_az(),get_gx(),get_gy(),get_gz()]) #must be write row
+        print(get_stuff())
+        #time.sleep(1)
